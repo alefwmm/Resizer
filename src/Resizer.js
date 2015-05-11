@@ -7,7 +7,7 @@
 
 'use strict';
 
-// Let resize handlers be defined only once
+// Let Resizer be defined only once
 if (!window.Resizer) {
     (function(){
 
@@ -17,14 +17,16 @@ if (!window.Resizer) {
         }
 
         // Select the correct Request Animation Frame function
-        function requestFrame(callback) {
+        function requestFrame(callback, thisArg, args) {
             var raf =
                 window.requestAnimationFrame ||
                 window.mozRequestAnimationFrame ||
                 window.webkitRequestAnimationFrame ||
                 getTimeout;
 
-            return raf(callback);
+            return raf(function () {
+                callback.apply(thisArg, args);
+            });
         }
 
         // Select the corrent Cancel Animation Frame function
@@ -38,10 +40,11 @@ if (!window.Resizer) {
             return caf(id);
         }
 
-        // Calls for each callback function
-        function call(element, event) {
+        // Execute each callback function
+        function exec(element, event) {
             var trigger = element.$resizeTrigger;
             var callbacks = trigger.$resizeListeners;
+
 
             for (
                 var i = 0,
@@ -51,7 +54,8 @@ if (!window.Resizer) {
                 ++i,
                     callback = callbacks[i]
             ) {
-                callback.call(trigger, event);
+                // Execute the callback asynchronously
+                requestFrame(callback, trigger, [event]);
             }
         }
 
@@ -61,9 +65,7 @@ if (!window.Resizer) {
 
             if (element.$resizeRAF) cancelFrame(element.$resizeRAF);
 
-            element.$resizeRAF = requestFrame(function () {
-                return call(element, event);
-            });
+            element.$resizeRAF = requestFrame(exec, null, [element, event]);
         }
 
         // Onload event reset on trap element

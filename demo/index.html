@@ -1,0 +1,26 @@
+<!DOCTYPE html><html><head><style type="text/css">.click {
+    display: table;
+    width: 100px;
+    height: 100px;
+    background: #F00;
+    text-align: center;
+    vertical-align: middle;
+}</style></head><body>Open browser's console and see the complete execution<div id="button" class="click">Click me!</div><script src="../src/Resizer.js"></script><script type="text/javascript">var button = document.getElementById("button");
+
+Resizer.add(button, function () {
+    button.style.background = "#069";
+});
+
+Resizer.add(button, function () {
+    console.log("Called asynchronously");
+});
+
+Resizer.add(button, function () {
+    console.log("Called asynchronously 2");
+})
+
+button.addEventListener("click", function () {
+    button.style.width
+        = button.style.height
+        = "200px";
+});</script></body></html>
