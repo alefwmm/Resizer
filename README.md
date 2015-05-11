@@ -23,6 +23,8 @@ Using HTML Import:
 <link rel=”import” src=”path/to/bower_components/Resizer/Resizer.html” />
 ```
 
+See the [demo](http://alefwmm.github.io/Resizer/).
+
 ## Adding resize event callbacks
 
 Simple as follow:
